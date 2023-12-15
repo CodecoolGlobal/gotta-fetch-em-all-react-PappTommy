@@ -62,13 +62,12 @@ function App() {
   ]);
   const [selectedBackground, setSelectedBackground] = useState("");
 
-  const eggUrl = "https://pokeapi.co/api/v2/pokemon/cosmog"
+  const eggUrl = "https://pokeapi.co/api/v2/pokemon/suicune"
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch data
         const response = await fetch("https://pokeapi.co/api/v2/location");
         const jsonData = await response.json();
         setData(jsonData.results);
@@ -235,7 +234,6 @@ setTimeout(() => {
           isHatched ? (
             <HatchedPoke
               name={egg.name.toUpperCase()}
-              img={egg.sprites.front_default}
               goBack={handleNoEggClick}
             />
           ) : (
@@ -343,4 +341,4 @@ setTimeout(() => {
 
 export default App;
 
-//Xmas code: Cosmog
+

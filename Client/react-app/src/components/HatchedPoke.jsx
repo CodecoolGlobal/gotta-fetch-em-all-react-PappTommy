@@ -1,11 +1,10 @@
-
-
-const HatchedPoke = ({name, img, goBack}) => {
+const HatchedPoke = ({name, goBack}) => {
   return (
-    <div>
-        <h1><label>{name} is hatched! </label></h1>
-        <img src={img} alt={`${name} picture`} />
-        <button onClick={goBack}>Let's go back to your journey with your new friend</button>
+    <div className="suicunediv">
+        <h1 className="suicunelabel">{name} is hatched!</h1>
+        <img src={`https://www.shinyhunters.com/images/regular/245.gif`} alt={`${name} picture`} />
+        <br/>
+        <button className="newfriendbutton" onClick={goBack}>Let's go back to your journey with your new friend</button>
     </div>
   )
 }

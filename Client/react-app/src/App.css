@@ -266,3 +266,48 @@ text-align: center;
   gap: 50px;
 }
 
+
+.alleggdiv{
+  text-align: center;
+  color: aquamarine;
+}
+
+.hatchbutton{
+  margin: 30px;
+  background-color: rgb(0 126 105 / 70%);
+  color: aquamarine;
+  border: 2px solid aquamarine;
+  font-size: 50px;
+}
+
+.gobackbutton{
+  background-color: rgb(0 126 105 / 70%);
+  color: aquamarine;
+  border: 2px solid aquamarine
+}
+
+.egglabel{
+  background-color: rgb(0 126 105 / 70%);
+  border: 2px solid aquamarine
+}
+
+.eggpic{
+  max-width: 20%;
+  height: auto;
+}
+
+.suicunediv{
+  text-align: center;
+  color: aquamarine;
+}
+
+.suicunelabel{
+  background-color: rgb(0 126 105 / 70%);
+  border: 2px solid aquamarine
+}
+
+.newfriendbutton{
+  background-color: rgb(0 126 105 / 70%);
+  color: aquamarine;
+  border: 2px solid aquamarine
+}

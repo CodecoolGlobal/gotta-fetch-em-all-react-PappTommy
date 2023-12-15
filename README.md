@@ -23,3 +23,14 @@ Currently, two official plugins are available:
     border: 2px solid black;
     background-color: #1953cb;
 }
+
+
+const [selectedLocation, setSelectedLocation] = useState(null);
+const [selectedPlayerPokemon, setSelectedPlayerPokemon] = useState(false);
+const [myHP, setMyHP] = useState(null);
+const [wildHP, setWildHP] = useState(null);
+const [ourTeam, setOurTeam] = useState([
+    "https://pokeapi.co/api/v2/pokemon/reshiram",
+    "https://pokeapi.co/api/v2/pokemon/victini",
+    "https://pokeapi.co/api/v2/pokemon/samurott",
+  ])
