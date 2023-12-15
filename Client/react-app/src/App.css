@@ -189,6 +189,29 @@ button:hover {
   height: 15%;
   object-fit: cover;
   text-align: center;
+  transition: all 1s ease;
+}
+
+.attacking {
+  transition: all 0.4s ease;
+  transform: translate(200px, -80px);
+}
+
+.enemyattacking {
+  transition: all 0.4s ease;
+  transform: translate(-200px, 80px);
+}
+
+.defending{
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-10px, -10px); }
+  50% { transform: translate(10px, 10px); }
+  75% { transform: translate(-10px, -10px); }
+  100% { transform: translate(0, 0); }
 }
 
 .enemypokepic{
@@ -199,6 +222,13 @@ button:hover {
   height: 15%;
   object-fit: cover;
   text-align: center;
+  transition: all 1s ease;
+}
+
+.hit {
+  filter: hue-rotate(250deg);
+  transition: filter 0.5s ease;
+  animation: shake 0.5s ease;
 }
 
 .enemypic{
@@ -214,18 +244,18 @@ button:hover {
 }
 
 .enemy-progress {
-  appearance: none; /* Disable default styles */
-  background-color: grey; /* Set the background color for the unfilled part */
+  appearance: none;
+  background-color: grey;
   border: 4px solid red;
   border-radius: 12px;
 }
 
 .enemy-progress::-webkit-progress-value {
-  background-color: red; /* Set the background color for the filled part in WebKit browsers (Chrome, Safari) */
+  background-color: red;
 }
 
 .enemy-progress::-moz-progress-bar {
-  background-color: red; /* Set the background color for the filled part in Firefox */
+  background-color: red;
 }
 
 .player-progress {
@@ -265,7 +295,6 @@ text-align: center;
   color: #DFFF00;
   gap: 50px;
 }
-
 
 .alleggdiv{
   text-align: center;
