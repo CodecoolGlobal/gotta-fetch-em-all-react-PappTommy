@@ -6,15 +6,19 @@ import Encounter from "./components/Encounter";
 import Buttons from "./components/Buttons";
 import Egg from "./components/Egg"
 import BattleAnnouncer from "./components/BattleAnnouncer";
+import MenuMusic from "./components/MenuMusic";
+import FightMusic from "./components/FightMusic"
+import ChoosePokeMusic from "./components/ChoosePokeMusic"
 import "./App.css";
 import HatchedPoke from "./components/HatchedPoke";
 
+
 const useTypedMessage = (message) => {
   const [typedMessage, setTypedMessage] = useState("");
-
+  
   useEffect(() => {
     setTypedMessage("");
-
+    
     if (message.length) {
       (async () => {
         let visibleMessage = "";
@@ -26,13 +30,13 @@ const useTypedMessage = (message) => {
       })();
     }
   }, [message]);
-
+  
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+  
   return typedMessage;
 };
 
-function App() {
+function App() {  
   const [data, setData] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [playerPokemonStats, setPlayerPokemonStats] = useState([]);
@@ -61,69 +65,67 @@ function App() {
     "url('/pictures/background7.jpg')",
   ]);
   const [selectedBackground, setSelectedBackground] = useState("");
+  const eggUrl = "https://pokeapi.co/api/v2/pokemon/suicune"
 
-  const eggUrl = "https://pokeapi.co/api/v2/pokemon/cosmog"
-
+  const [menuMusic, setMenuMusic] = useState(new Audio('/songs/menumusic.mp3'));
+  const [fightMusic, setFightMusic] = useState(new Audio('/songs/fightmusic.mp3'));
+  const [choosepokeMusic, setChoosePokeMusic] = useState(new Audio('/songs/choosepokemusic.mp3'));
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch data
         const response = await fetch("https://pokeapi.co/api/v2/location");
         const jsonData = await response.json();
         setData(jsonData.results);
-
+        
         const fetchPromises = ourTeam.map(async (pokemonUrl) => {
           const response1 = await fetch(pokemonUrl);
           return response1.json();
         });
         const pokemonStats = await Promise.all(fetchPromises);
         setPlayerPokemonStats(pokemonStats);
-
+        
         const eggResponse = await fetch(eggUrl)
         const jsonEgg = await eggResponse.json();
-          hatchEgg(jsonEgg);
-
+        hatchEgg(jsonEgg);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  
+    
     fetchData();
-  
+    
   }, [ourTeam]);
-
+  
   const handleLocationClick = async (locationKey) => {
     try {
       const response = await fetch(
         `https://pokeapi.co/api/v2/location/${locationKey}/`
-      );
-      const locationData = await response.json();
-      const areas = locationData.areas;
-      if (areas.length <= 0) {
-        setIsWildPokemon(true);
-      } else {
-        const randomArea = areas[Math.floor(Math.random() * areas.length)];
-        const areaResponse = await fetch(randomArea.url);
-        const areaData = await areaResponse.json();
-        const pokemons = areaData["pokemon_encounters"];
-        const randomPokemon =
+        );
+        const locationData = await response.json();
+        const areas = locationData.areas;
+        if (areas.length <= 0) {
+          setIsWildPokemon(true);
+        } else {
+          const randomArea = areas[Math.floor(Math.random() * areas.length)];
+          const areaResponse = await fetch(randomArea.url);
+          const areaData = await areaResponse.json();
+          const pokemons = areaData["pokemon_encounters"];
+          const randomPokemon =
           pokemons[Math.floor(Math.random() * pokemons.length)].pokemon;
-        const pokemonResponse = await fetch(randomPokemon.url);
-        const pokemonData = await pokemonResponse.json();
-        setSelectedLocation(pokemonData);
-        setWildHP(pokemonData.stats[0].base_stat)
-        setmaxwildpokemonhp(pokemonData.stats[0].base_stat);
+          const pokemonResponse = await fetch(randomPokemon.url);
+          const pokemonData = await pokemonResponse.json();
+          setSelectedLocation(pokemonData);
+          setWildHP(pokemonData.stats[0].base_stat)
+          setmaxwildpokemonhp(pokemonData.stats[0].base_stat);
+        }
+      } catch (error) {
+        console.error("Error fetching location data:", error);
       }
-
-      
-    } catch (error) {
-      console.error("Error fetching location data:", error);
-    }
-  };
-
-const menuBackground = () =>{
-  document.body.style.background = "url('/pictures/menubackground.jpg')";
+    };
+    
+    const menuBackground = () =>{
+      document.body.style.background = "url('/pictures/menubackground.jpg')";
     document.body.style.backgroundRepeat = 'no-repeat';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundSize = 'cover';
@@ -138,7 +140,6 @@ const menuBackground = () =>{
   };
   
   const handleAttack = () => {
-    //((((2/5+2)*B*60/D)/50)+2)*Z/255 B attacker attack, D defending pokemon def
     const randomNumber = Math.floor(Math.random() * (255 - 217 + 1)) + 217;
     
     const myAttack = selectedPlayerPokemon.stats[1].base_stat;
@@ -146,19 +147,19 @@ const menuBackground = () =>{
     const wildHPLocal = wildHP;
     
     const myTurn =
-    wildHPLocal -
-    Math.abs(
-      Math.floor(
-        ((((2 / 5 + 2) * myAttack * 60) / wildDefense / 50 + 2) *
-        randomNumber) /
-        255
+      wildHPLocal -
+      Math.abs(
+        Math.floor(
+          ((((2 / 5 + 2) * myAttack * 60) / wildDefense / 50 + 2) *
+          randomNumber) /
+          255
         )
-        );
-        
+      );
+      
     const wildAttack = selectedLocation.stats[1].base_stat;
     const myDefense = selectedPlayerPokemon.stats[2].base_stat;
     const myHPLocal = myHP;
-
+  
     const wildTurn =
       myHPLocal -
       Math.abs(
@@ -168,21 +169,46 @@ const menuBackground = () =>{
             255
         )
       );
-      setMyHP(wildTurn);
-      setWildHP(myTurn);
-      const  pokecenter = document.querySelector('.backtocenter')
-      if(wildTurn <= 0){
-        setAnnouncerMessage(`Your Pokemon fainted and has to go back to the PokeCenter!`);
-        pokecenter.textContent = 'Back To PokeCenter'
-      }
-      else if (myTurn <= 0){
-        setAnnouncerMessage(`You succesfully catched the wild Pokemon!`);
-        pokecenter.textContent = 'Back To Locations'
+    
+    setMyHP(wildTurn);
+    setWildHP(myTurn);
+  
+    const playerpoke = document.querySelector('.playerpokepic');
+    const enemypoke = document.querySelector('.enemypokepic');
+    const pokecenter = document.querySelector('.backtocenter');
+  
+    playerpoke.classList.add('attacking');
+    enemypoke.classList.add('defending');
+    enemypoke.classList.add('hit');
+  
+    setTimeout(() => {
+      playerpoke.classList.remove('attacking');
+      enemypoke.classList.remove('defending');
+      enemypoke.classList.remove('hit');
 
-        const newList = [...ourTeam, `https://pokeapi.co/api/v2/pokemon/${selectedLocation.name}`]
-        setOurTeam(newList)
-      }
+      enemypoke.classList.add('enemyattacking');
+      playerpoke.classList.add('defending');
+      playerpoke.classList.add('hit');
+  
+      setTimeout(() => {
+        enemypoke.classList.remove('enemyattacking');
+        playerpoke.classList.remove('defending');
+        playerpoke.classList.remove('hit');
+  
+        if (wildTurn <= 0) {
+          setAnnouncerMessage(`Your Pokemon fainted and has to go back to the PokeCenter!`);
+          pokecenter.textContent = 'Back To PokeCenter';
+        } else if (myTurn <= 0) {
+          setAnnouncerMessage(`You successfully caught the wild Pokemon!`);
+          pokecenter.textContent = 'Back To Locations';
+  
+          const newList = [...ourTeam, `https://pokeapi.co/api/v2/pokemon/${selectedLocation.name}`];
+          setOurTeam(newList);
+        }
+      }, 1000);
+    }, 1000);
   };
+  
 
   const handleBackClick = () => {
     setSelectedLocation(null);
@@ -235,7 +261,6 @@ setTimeout(() => {
           isHatched ? (
             <HatchedPoke
               name={egg.name.toUpperCase()}
-              img={egg.sprites.front_default}
               goBack={handleNoEggClick}
             />
           ) : (
@@ -247,6 +272,9 @@ setTimeout(() => {
           selectedLocation ? (
             isPokemonSelected ? (
               <>
+              <FightMusic
+              fightmusic={fightMusic}
+              />
                 <Encounter
                   key={1}
                   enemyname={selectedLocation.name.toUpperCase()}
@@ -285,6 +313,7 @@ setTimeout(() => {
               </>
             ) : (
               <>
+              <ChoosePokeMusic choosepokemusic={choosepokeMusic} />
               <div className="pokemoncontainer">
               <EnemyPokemon
                     key={1}
@@ -297,8 +326,6 @@ setTimeout(() => {
                   />
                   <button className="backbutton" onClick={handleBackClick}>Back</button>
                 </div>
-
-
                 <div className="mypokemon">
                   {playerPokemonStats.map((pokemon, index) => (
                     <PlayerTeam
@@ -316,6 +343,7 @@ setTimeout(() => {
             )
           ) : (
             <ul>
+              <MenuMusic menumusic={menuMusic} />
               <BattleAnnouncer
                 message={
                   announcerMessage ||
@@ -333,14 +361,10 @@ setTimeout(() => {
             </ul>
           )
         )
-
       }
-
-      
     </div>
   );
 }
 
 export default App;
 
-//Xmas code: Cosmog
